@@ -1,8 +1,9 @@
 'use client'
-import { redirect } from "next/navigation"
 import { useState } from "react";
 
-export default function page() {
+export default function Page() {
+  const [employee, setEmployee] = useState([]);
+
   async function addEmployee(data:FormData) {
     const firtName = data.get('firstName')?.valueOf();
     const lastName = data.get('lastName')?.valueOf();
@@ -18,10 +19,9 @@ export default function page() {
     } catch (error) {
       console.log(error)
     }
-  
+
   }
 
-  const [employee, setEmployee] = useState([]);
   async function getemployee() {
     await fetch('/api/addemployee')
             .then(data=>data)
