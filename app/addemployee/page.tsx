@@ -1,5 +1,6 @@
 'use client'
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Page() {
   const [employee, setEmployee] = useState([]);
@@ -19,7 +20,6 @@ export default function Page() {
     } catch (error) {
       console.log(error)
     }
-
   }
 
   async function getemployee() {
@@ -47,6 +47,13 @@ export default function Page() {
 
   return (
     <div className="container mx-auto p-4 ">
+      <div>
+        <button type="button" className="btn btn-accent m-1">
+          <Link href='/'>
+             Back
+          </Link>
+        </button>
+      </div>
       <h1 className="text-2xl font-semibold mb-4">Add Employee</h1>
       <form action={addEmployee} className="max-w-md">
         <div className="mb-4">
