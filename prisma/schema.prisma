@@ -11,15 +11,15 @@ generator client {
 // }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model Employee_test {
-  id Int @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   firtName String?
   lastName String
-  email String @unique
+  email    String  @unique
   password String
 }

@@ -20,6 +20,9 @@ export default function Page() {
     } catch (error) {
       console.log(error)
     }
+
+    await getemployee()
+    return
   }
 
   async function getemployee() {
@@ -34,6 +37,9 @@ export default function Page() {
     await fetch('/api/addemployee', {
       method: 'PUT'
     })
+
+    await getemployee()
+    return
   }
 
   async function deletemployee(email:String) {
