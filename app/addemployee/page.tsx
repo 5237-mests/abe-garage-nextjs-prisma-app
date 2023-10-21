@@ -1,9 +1,12 @@
 'use client'
 import { useState } from "react";
 import Link from "next/link";
+import Modal from "@/components/Modal";
 
 export default function Page() {
   const [employee, setEmployee] = useState([]);
+  const [showModal3, setShowModal3] = useState(false)
+  const [status, setStatus] = useState('')
 
   async function addEmployee(data:FormData) {
     const firtName = data.get('firstName')?.valueOf();
@@ -11,17 +14,21 @@ export default function Page() {
     const email = data.get('email')?.valueOf();
     const password = data.get('password')?.valueOf();
 
+    
     try {
       await fetch('/api/addemployee', {
         method: 'POST',
         body: JSON.stringify({firtName, lastName, email, password})
       })
-  
     } catch (error) {
       console.log(error)
     }
-
+    setStatus('Successfully added!')
     await getemployee()
+
+    setTimeout(()=>{
+      setStatus('')
+    }, 3000)
     return
   }
 
@@ -33,11 +40,26 @@ export default function Page() {
             .catch(error=>console.log(error));
   }
 
-  async function updateployee() {
-    await fetch('/api/addemployee', {
-      method: 'PUT'
-    })
+  const [em, setEm] = useState('')
+  const updateButton = (x: any) => {
+    setShowModal3(true)
+    setEm(x)
+  }
 
+  async function updateployee(data:FormData) {
+    const firtName = data.get('firstNameu')?.valueOf();
+    const lastName = data.get('lastNameu')?.valueOf();
+    const email = data.get('emailu')?.valueOf();
+    const password = data.get('passwordu')?.valueOf();
+
+    try {
+      await fetch('/api/addemployee', {
+        method: 'PUT',
+        body: JSON.stringify({firtName, lastName, email, password})
+      })
+    } catch (error) {
+      console.log(error);
+    }
     await getemployee()
     return
   }
@@ -67,6 +89,7 @@ export default function Page() {
             First Name
           </label>
           <input
+            required
             type="text"
             id="firstName"
             name="firstName"
@@ -79,6 +102,7 @@ export default function Page() {
             Last Name
           </label>
           <input
+            required
             type="text"
             id="lastName"
             name="lastName"
@@ -91,6 +115,7 @@ export default function Page() {
             Email
           </label>
           <input
+            required
             type="email"
             id="email"
             name="email"
@@ -103,6 +128,7 @@ export default function Page() {
             Password
           </label>
           <input
+            required
             type="password"
             id="password"
             name="password"
@@ -111,11 +137,14 @@ export default function Page() {
         </div>
 
         <button
+          onClick={()=>setStatus('Sending data... wait')}
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
         >
           Add Employee
         </button>
-        
+        <div className="bg-green-300">
+          {status }
+        </div>
       </form>
       <div>
         <br/>
@@ -125,7 +154,6 @@ export default function Page() {
         >
           Get all Employee
         </button>
-
 
         <div className="overflow-x-auto">
           <table className="table">
@@ -141,7 +169,6 @@ export default function Page() {
               </tr>
             </thead>
             <tbody>
-             
               {employee?.map((empl, id)=>(
                 <tr key={id} className="hover">
                    <th>{id + 1}</th>
@@ -153,74 +180,74 @@ export default function Page() {
                     <button
                       type="button"
                       className="btn btn-warning"
-                      // onClick={()=>document.getElementById('my_modal_1')?.showModal()}
+                      onClick={()=>updateButton(empl['email'])}
                     >
                       Update
                     </button>
-                    <dialog id="my_modal_1" className="modal">
-                      <div className="modal-box">
-                        <h3 className="font-bold text-lg">Hello!</h3>
-                        <p className="py-4">Press ESC key or click the button below to close</p>
-                        <div className="modal-actionn">
-                          <form method="dialogg" action={updateployee}>
-                            <div className="mb-4">
-                              <label htmlFor="firtName" className="block text-gray-600 mb-2">
-                                First Name
-                              </label>
-                              <input
-                                type="text"
-                                value={empl['firstName']}
-                                id="firstName"
-                                name="firstName"
-                                className="w-full p-2 border border-gray-300 rounded"
-                              />
-                            </div>
+                    <Modal isVisible={showModal3} onClose={()=>setShowModal3(false)}>
+                      <div className="p-5">
+                        <form action={updateployee} className="max-w-md">
+                          <div className="mb-4">
+                            <label htmlFor="firstNameu" className="block text-gray-600 mb-2">
+                              First Name
+                            </label>
+                            <input
+                              required
+                              type="text"
+                              id="firstNameu"
+                              name="firstNameu"
+                              className="w-full p-2 border border-gray-300 rounded"
+                            />
+                          </div>
 
-                            <div className="mb-4">
-                              <label htmlFor="lastName" className="block text-gray-600 mb-2">
-                                Last Name
-                              </label>
-                              <input
-                                type="text"
-                                value={empl['lastName']}
-                                id="lastName"
-                                name="lastName"
-                                className="w-full p-2 border border-gray-300 rounded"
-                              />
-                            </div>
+                          <div className="mb-4">
+                            <label htmlFor="lastNameu" className="block text-gray-600 mb-2">
+                              Last Name
+                            </label>
+                            <input
+                              required
+                              type="text"
+                              id="lastNameu"
+                              name="lastNameu"
+                              className="w-full p-2 border border-gray-300 rounded"
+                            />
+                          </div>
 
-                            <div className="mb-4">
-                              <label htmlFor="email" className="block text-gray-600 mb-2">
-                                Email
-                              </label>
-                              <input
-                                type="email"
-                                value={empl['email']}
-                                id="email"
-                                name="email"
-                                className="w-full p-2 border border-gray-300 rounded"
-                              />
-                            </div>
+                          <div className="mb-4">
+                            <label htmlFor="emailu" className="block text-gray-600 mb-2">
+                              Email
+                            </label>
+                            <input
+                              type="email"
+                              value={em}
+                              id="emailu"
+                              name="emailu"
+                              className="w-full p-2 border border-gray-300 rounded"
+                            />
+                          </div>
 
-                            <div className="mb-4">
-                              <label htmlFor="password" className="block text-gray-600 mb-2">
-                                Password
-                              </label>
-                              <input
-                                type="password"
-                                value={empl['password']}
-                                id="password"
-                                name="password"
-                                className="w-full p-2 border border-gray-300 rounded"
-                              />
-                            </div>
+                          <div className="mb-4">
+                            <label htmlFor="passwordu" className="block text-gray-600 mb-2">
+                              Password
+                            </label>
+                            <input
+                              required
+                              type="password"
+                              id="passwordu"
+                              name="passwordu"
+                              className="w-full p-2 border border-gray-300 rounded"
+                            />
+                          </div>
 
-                            {/* <div className="btn btn-warning">update</div> */}
-                            <button className="btn btn-warning">Update</button>
-                          </form>
-                        </div>
+                          <button
+                            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                          >
+                            Update
+                          </button>
+                        
+                        </form>
                       </div>
-                    </dialog>
+                    </Modal>
                    </td>
                    <td>
                     <button

@@ -14,11 +14,15 @@ export async function POST(request){
 
 
 export async function PUT(request) {
-  // const body = await request.json()
-  await prisma.employee_test.update()
-  // return new Response(JSON.stringify({body}));
-  console.log('welcome PUT')
-  return new Response('hi')
+  const body = await request.json()
+  await prisma.employee_test.update({
+    where: {
+      email: body.email,
+    },
+    data: body,
+  })
+
+  return new Response('Updated!')
 }
 
 
